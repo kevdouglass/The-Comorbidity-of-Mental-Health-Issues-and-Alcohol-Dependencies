@@ -1,0 +1,139 @@
+---
+title: "The Comorbidity of Mental Health Issues and Alcohol Dependencies"
+
+author: 'Group A: Kevin Douglass, Kiley Baum, Justin Hicks, Shannon Sinkovich, Czarina Monroy'
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+#                             Group Research Assignment 3: Exploratory Data Analysis. 
+
+## RESEARCH QUESTIONS
+(1) How does mental health influence alcohol dependencies? 
+(2) What is the relationship between alcohol consumption and social phobia?
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(knitr)
+library(dplyr)
+```
+
+```{r, include=FALSE}
+MY_BASE_PATH <- "C:/Users/kevdo/Desktop/CSU-Chico/MATH-315-stats"
+MY_FILE_PATH <- "/project/nesarc/Nesarc_Data.csv"
+PATH_TO_DATASET <- paste0(MY_BASE_PATH, MY_FILE_PATH)
+```
+
+```{r}
+# Load our Nesarc Dataset.
+nesarcData <- read.csv(PATH_TO_DATASET, header = TRUE)
+```
+
+
+```{r}
+# Create New Columns (Just so they are more readable variable names) for the Nesarc Dataset.
+nesarcData$anxiousAfterDrinking <- nesarcData$S2BQ1A9C
+nesarcData$fearOrAvoidanceOfSocialSituations <- nesarcData$S7Q1
+nesarcData$whereUsuallyDrankAlchohalPast12Months <- nesarcData$S2AQ7I
+```
+
+#                                               METHODS
+## DATA COLLECTION.
+  The population of the study was non-institutionalized United States (including all states and the district of Columbia) civilians 18 years of age or older. Multistage probability sampling was used in order to randomize the sample as well as an array of demographics. The primary sampling unit was individual counties but some of the rural counties were combined. From the primary sampling unit, a stratified proportional to size sampling occurred. There was a measure of size composite applied to PSU used to control things such as minority status and workloads in areas with high minorities. A representative sample of 36,309 adults that lived in private households and college dormitories were chosen. The overview points out that black, Hispanics and Asian adults were interviewed at high rates to ensure reliable estimates of these populations.
+  1000 trained interviewers visited the selected sample addresses. They would interview these people and attempt to collect saliva data. They were all asked questions relating to lifestyle, background, drinking practices, mood, age, education level and a variety of other aspects relating to these ideas.  The interviewers would transmit the data electronically to Westat’s office daily. 
+  There seems to be varying non response rates per variable. The question “where usually drank in the past 12 months,” has nearly 3000 non responses whereas “had strong fear or avoidance in social situations” has nearly 0. Depending on the question and how the question was asked impacted the likelihood of receiving a non response.
+
+## VARIABLE CREATION.
+**Variable 1** questions whether a participant ever feels anxious or nervous when effects of alcohol were wearing off. This variable deals with categorical data with response options of 1, 2, and 9 meaning ‘yes’, ‘no’, and ‘unknown’ respectively. We have refactored the numerical data from our dataset and associate each response with its corresponding categorical type. The following shows how we’ve defined Variable 1 as categorical data:
+```{r}
+#   1 = “Yes, I have felt anxious or nervous when the effects of alcohol were wearing off.”
+#   2 = “No, I have not felt anxious or nervous when the effects of alcohol were wearing off.”
+#   9 = “Unknown/ missing”
+```
+**Variable 2** questions whether a participant ever had strong fear or avoidance of social situations. This variable also deals with categorical data with response options of 1, 2, and 9 meaning ‘yes’, ‘no’, and ‘unknown’ respectively. In this case, we chose to refactor the numerical data from our dataset and associate each response with its corresponding categorical type. The following shows how we’ve defined Variable 2 as categorical data: 
+```{r}
+#   1 = “Yes, I have had strong fear or avoidance of social situations”
+#   2 = “No, I have not had strong fear or avoidance of social situations”
+#   9 = “Unknown/ missing”
+```
+**Variable 3** questions where a participant usually drank liquor in the last 12 months. This variable also deals with categorical data with response options of ‘in own home’, ‘in homes of friends or relatives’, ‘in public places’, and ‘unknown’ that are represented in our NesArc dataset as numerical data (1, 2, 3, and 9 respectively). To make this data categorical, we have refactored each numerical value’s response with its corresponding categorical variable. The following shows how we’ve defined Variable 3 as categorical data:
+```{r}
+#   1 = “In the last 12 months, I usually drank liquor in my own home.”
+#   2 = “In the last 12 months, I usually drank liquor in the homes of friends or relatives.”
+#   3 = “In the last 12 months, I usually drank liquor in public places.”
+#   9 = “Unknown”
+```
+\newpage
+
+### VARIABLE-01: `S2BQ1A9C`
+## `EVER FEEL ANXIOUS OR NERVOUS WHEN EFFECTS OF ALCOHOL WERE WEARING OFF ?`
+### Categorical Data representation from (`S2BQ1A9C`) variable: 
+```
+--------------------------------------------------------------
+1. Yes
+2. No
+9. Unknown
+--------------------------------------------------------------
+```
+```{r}
+nesarcData %>% select(anxiousAfterDrinking) %>% 
+  na.omit() %>% 
+  ggplot(aes(factor(anxiousAfterDrinking,
+                    labels = c("Yes", "No", "Unknown")))) + 
+  geom_bar() + 
+  ggtitle("BarChart | Variable 1") + 
+  labs(x = "Participant felt anxious or nervous when the effects of alcohol were wearing off?") + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+\newpage
+### VARIABLE-02: `S7Q1`
+## `EVER HAD STRONG FEAR OR AVOIDANCE OF SOCIAL SITUATION ?`
+### Categorical Data representation from (`S7Q1`) variable: 
+```
+--------------------------------------------------------------
+1. Yes
+2. No
+9. Unknown
+--------------------------------------------------------------
+```
+```{r}
+nesarcData %>% select(fearOrAvoidanceOfSocialSituations) %>% 
+  na.omit() %>% 
+  ggplot(aes(factor(fearOrAvoidanceOfSocialSituations,
+                    labels = c("Yes", "No", "Unknown")))) + 
+  geom_bar() + 
+  ggtitle("BarChart | Variable 2") + 
+  labs(x = "Particpant ever have strong fear or avoidance of social situations?") + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+\newpage
+### VARIABLE-03: `S2AQ7I`
+## `WHERE USUALLY DRANK LIQUOR IN LAST 12 MONTHS ?`
+### Categorical Data representation from (`S2AQ7I`) variable: 
+```
+--------------------------------------------------------------
+1. In own home
+2. In homes of friends or relatives
+3. In public places
+9. Unknown
+--------------------------------------------------------------
+```
+```{r}
+nesarcData %>% select(whereUsuallyDrankAlchohalPast12Months) %>% 
+  na.omit() %>% 
+  ggplot(aes(factor(whereUsuallyDrankAlchohalPast12Months, 
+             labels = c("In own home", "Friends/Relatives homes", "In public places", "Unknown")))) + 
+  geom_bar() + 
+  ggtitle("BarChart | Variable 3") + 
+  labs(x="In the last 12 months, where participant usually drink liquor?") + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+
+\newpage
+## Assessment. 
+The three variables chosen are categorical data and have been graphed using bar charts. The categories provided to the participants of this study are self-explanatory. Any responses of N/A have been removed for simplicity, but could be useful to include in some instances. For example, if we had more data to visualize patterns in responses (identify answers to an individual and group similar individuals together), we could consider if people who do not consume alcohol report more or less frequently of having fears or avoidance of social situations than people who do. We can see that some limitations exist with this dataset, but it is easily replicable with some opportunities to improve such as improving the metadata and respondent tracking.
+
+## Results.
+In our attempt to analyze how mental health influenced alcohol dependencies and the relationship between alcohol consumption and social phobia we created bar charts to visualize the responses to each question. When the participants were asked if they “EVER HAD STRONG FEAR OR AVOIDANCE OF SOCIAL SITUATION” 87% answered no, 9% said yes and 3% was unknown. The next variable we analyzed was if the participant “EVER FEEL ANXIOUS OR NERVOUS WHEN EFFECTS OF ALCOHOL WERE WEARING OFF” 93% of the respondents that chose to provide an answer said no, 6% said yes and 0.8% gave an answer of “unknown.” In this chart we did not include the N/A responses that claimed to be lifetime abstainers. The last variable we looked at was “WHERE USUALLY DRANK LIQUOR IN LAST 12 MONTHS '' the majority of respondents answered N/A that they have not drank liquor in the last 12 months. We removed this category to focus on those that had drank in the last 12 months. Out of those that gave a response other than N/A 43% drank in public places, 36% drank in their own home, 20% drank in the homes of friends and relatives and 0.4% gave an answer of “unknown”.
